@@ -37,12 +37,6 @@ export const PRODUCTS: Record<string, Product> = {
     tileImage: "/homescr/btn-milk.png",
     productImage: "/products/Milk.png",
   },
-  PL0: {
-    code: "PL0",
-    name: "Coming Soon",
-    tileImage: "/homescr/btn-eyes.png",
-    isPlaceholder: true,
-  },
 };
 
 export const PRODUCT_CODES = Object.keys(PRODUCTS);
