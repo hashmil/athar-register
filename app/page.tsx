@@ -26,6 +26,10 @@ function HomeContent() {
   useBarcodeScanner({
     onScan: (code) => {
       const product = getProduct(code);
+      if (product?.isHomeButton) {
+        // Already on home page, ignore
+        return;
+      }
       if (product && !product.isPlaceholder && product.productImage) {
         router.push(`/product/${code}`);
       } else {

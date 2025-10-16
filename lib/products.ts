@@ -4,6 +4,7 @@ export interface Product {
   tileImage: string;
   productImage?: string;
   isPlaceholder?: boolean;
+  isHomeButton?: boolean;
 }
 
 export const PRODUCTS: Record<string, Product> = {
@@ -36,6 +37,12 @@ export const PRODUCTS: Record<string, Product> = {
     name: "Filter Milk",
     tileImage: "/homescr/btn-milk.png",
     productImage: "/products/Milk.png",
+  },
+  HOM: {
+    code: "HOM",
+    name: "Home",
+    tileImage: "",
+    isHomeButton: true,
   },
 };
 

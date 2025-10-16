@@ -19,11 +19,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Disable text selection for kiosk UI */
+/* Disable text selection and cursor for kiosk UI */
 body {
   user-select: none;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
+  cursor: none;
 }
 
 /* Toast animation */
@@ -44,8 +45,14 @@ body {
 
 /* Tile button interactions */
 .tile-button {
-  cursor: pointer;
+  cursor: none;
   will-change: transform;
+}
+
+/* Hide cursor on all interactive elements */
+button,
+a {
+  cursor: none !important;
 }
 
 .tile-button:focus-visible {

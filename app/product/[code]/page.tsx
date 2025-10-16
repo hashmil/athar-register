@@ -24,6 +24,10 @@ export default function ProductPage() {
   useBarcodeScanner({
     onScan: (scannedCode) => {
       const scannedProduct = getProduct(scannedCode);
+      if (scannedProduct?.isHomeButton) {
+        router.push("/");
+        return;
+      }
       if (scannedProduct && !scannedProduct.isPlaceholder && scannedProduct.productImage) {
         router.push(`/product/${scannedCode}`);
       } else {
