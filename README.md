@@ -70,6 +70,73 @@ bun run build
 bun start
 ```
 
+## Docker Deployment
+
+### Build and Push to Registry
+
+The project includes a `build.sh` script for building and pushing to your container registry:
+
+```bash
+# Build multi-arch image and push to registry
+./build.sh
+```
+
+This builds the image as `git.lionx.me/innovation/athar-register:latest` and pushes it to your registry.
+
+### Using Docker Compose (Recommended)
+
+The easiest way to deploy is with Docker Compose:
+
+```bash
+# Pull and start the container
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop the container
+docker-compose down
+
+# Update to latest version
+docker-compose pull
+docker-compose up -d --force-recreate
+```
+
+### Manual Docker Run
+
+Or run the container directly:
+
+```bash
+# Pull from registry
+docker pull git.lionx.me/innovation/athar-register:latest
+
+# Run container
+docker run -d \
+  --name athar-kiosk \
+  -p 3000:3000 \
+  --restart unless-stopped \
+  git.lionx.me/innovation/athar-register:latest
+```
+
+### Development with Docker
+
+For development with hot reload:
+
+```bash
+# Start dev container with volume mounts
+docker-compose -f docker-compose.dev.yml up
+
+# Your local code changes will be reflected immediately
+```
+
+### Image Details
+
+- **Multi-stage build** with Bun (deps/builder) and Node.js Alpine (runner)
+- **Standalone Next.js output** for minimal image size
+- **Non-root user** (nextjs:nodejs) for security
+- **Health checks** enabled with automatic restart
+- **Platform**: linux/amd64
+
 ## Barcode Scanner Setup
 
 Your USB barcode scanner should be configured as:
@@ -101,6 +168,11 @@ athar-register/
 │   ├── products/          # Full-screen product images (5 products)
 │   ├── home-bg.png        # Home background (19:6)
 │   └── back-btn-white.png # Back button icon
+├── Dockerfile             # Multi-stage production build
+├── Dockerfile.dev         # Development container
+├── docker-compose.yml     # Production deployment config
+├── docker-compose.dev.yml # Dev deployment with hot reload
+├── build.sh               # Build and push to registry script
 └── README.md
 ```
 
@@ -145,25 +217,47 @@ const SCAN_TIMEOUT = 300; // milliseconds
 
 ## Deployment
 
-### Raspberry Pi (Kiosk Mode)
+### Raspberry Pi / Kiosk Mode
 
-1. Install Chromium in kiosk mode:
+**Option 1: Using Docker (Recommended)**
+
+1. Install Docker:
 ```bash
-sudo pacman -S chromium  # Arch Linux
-sudo apt install chromium-browser  # Debian/Ubuntu
+curl -fsSL https://get.docker.com | sh
+sudo usermod -aG docker $USER  # Add user to docker group
 ```
 
-2. Auto-start on boot (create systemd service or use autostart):
+2. Deploy the app:
 ```bash
+# Pull and run with Docker Compose
+docker-compose up -d
+```
+
+3. Install Chromium and run in kiosk mode:
+```bash
+sudo apt install chromium-browser  # Debian/Ubuntu
+sudo pacman -S chromium  # Arch Linux
+
+# Start in kiosk mode
 chromium --kiosk --no-sandbox http://localhost:3000
 ```
 
-3. Run the Next.js app:
+**Option 2: Native Bun/Node**
+
+1. Install dependencies and build:
 ```bash
-bun run build && bun start
+bun install
+bun run build
 ```
 
-### Desktop
+2. Run the app:
+```bash
+bun start
+```
+
+3. Start Chromium in kiosk mode (same as above)
+
+### Desktop Testing
 
 Simply run `bun dev` and open the browser in full-screen mode (F11).
 

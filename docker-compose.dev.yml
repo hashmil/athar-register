@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  athar-register-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      args:
+        - NODE_ENV=development
+    image: athar-register:dev
+    container_name: athar-kiosk-dev
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    networks:
+      - athar-network
+    command: bun dev
+
+networks:
+  athar-network:
+    driver: bridge
